@@ -19,7 +19,7 @@ public class Utente {
         this.passwordHash = passwordHash;
         this.email = email;
         this.dataRegistrazione = dataRegistrazione;
-        this.ruolo = ruolo;
+
     }
 
     public int getId() {
@@ -74,9 +74,7 @@ public class Utente {
         return ruolo;
     }
 
-    public void setRuolo(Ruolo ruolo) {
-        this.ruolo = ruolo;
-    }
+
 
     @Override
     public String toString() {
