@@ -11,6 +11,17 @@ public class Utente {
     private LocalDate dataRegistrazione;
     private Ruolo ruolo;
 
+
+    public Utente(String nome, int id, String cognome, String passwordHash, String email, LocalDate dataRegistrazione, Ruolo ruolo) {
+        this.nome = nome;
+        this.id = id;
+        this.cognome = cognome;
+        this.passwordHash = passwordHash;
+        this.email = email;
+        this.dataRegistrazione = dataRegistrazione;
+        this.ruolo = ruolo;
+    }
+
     public int getId() {
         return id;
     }
@@ -59,7 +70,13 @@ public class Utente {
         this.dataRegistrazione = dataRegistrazione;
     }
 
+    public Ruolo getRuolo() {
+        return ruolo;
+    }
 
+    public void setRuolo(Ruolo ruolo) {
+        this.ruolo = ruolo;
+    }
 
     @Override
     public String toString() {
