@@ -1,6 +1,6 @@
-package its.incom.webdev.repository;
+package its.incom.webdev.persistence.repository;
 
-import its.incom.webdev.model.Sessione;
+import its.incom.webdev.persistence.model.Sessione;
 
 import javax.sql.DataSource;
 import java.sql.*;

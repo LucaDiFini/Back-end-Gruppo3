@@ -1,4 +1,4 @@
-package its.incom.webdev.model;
+package its.incom.webdev.persistence.model;
 
 public class Candidatura {
     private int id;

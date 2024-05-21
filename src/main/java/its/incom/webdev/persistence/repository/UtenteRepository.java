@@ -1,6 +1,6 @@
-package its.incom.webdev.repository;
+package its.incom.webdev.persistence.repository;
 
-import its.incom.webdev.model.Utente;
+import its.incom.webdev.persistence.model.Utente;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.BadRequestException;
 
@@ -24,7 +24,7 @@ public class UtenteRepository {
             throw new BadRequestException("Utente già esistente");
         }
 
-        String query = "INSERT INTO Utente (nome, cognome, email, passwordHash, dataRegistrazione, ruolo) VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Utente (nome, cognome, email, passwordHash, dataRegistrazione, ruolo) VALUES (?, ?, ?, ?, ?, 'S')";
         try (Connection connection = database.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
 
@@ -33,7 +33,7 @@ public class UtenteRepository {
             statement.setString(3, utente.getEmail());
             statement.setString(4, utente.getPasswordHash());
             statement.setObject(5, utente.getDataRegistrazione());
-            statement.setObject(6, utente.getRuolo().name());
+            //statement.setObject(6, utente.getRuolo().name());
 
             statement.executeUpdate();
         } catch (SQLException e) {

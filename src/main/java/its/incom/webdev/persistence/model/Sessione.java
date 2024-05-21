@@ -1,4 +1,4 @@
-package its.incom.webdev.model;
+package its.incom.webdev.persistence.model;
 
 import java.sql.Timestamp;
 

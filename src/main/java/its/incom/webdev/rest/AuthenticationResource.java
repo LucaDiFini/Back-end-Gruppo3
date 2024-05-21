@@ -1,6 +1,6 @@
 package its.incom.webdev.rest;
 
-import its.incom.webdev.repository.UtenteRepository;
+import its.incom.webdev.persistence.repository.UtenteRepository;
 
 public class AuthenticationResource {
     private final UtenteRepository utenteRepository;
