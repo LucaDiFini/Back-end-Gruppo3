@@ -4,6 +4,8 @@ import its.incom.webdev.persistence.model.Utente;
 import its.incom.webdev.persistence.model.Sessione;
 import its.incom.webdev.persistence.repository.UtenteRepository;
 import its.incom.webdev.persistence.repository.SessioneRepository;
+import its.incom.webdev.service.exception.SessionCreationException;
+import its.incom.webdev.service.exception.WrongUsernameOrPasswordException;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import java.sql.SQLException;
@@ -29,10 +31,9 @@ public class AuthenticationService {
         this.sessioneRepository = sessioneRepository;
     }
 
-    public int login(String nome, String cognome, String password) throws WrongUsernameOrPasswordException, SessionCreationException {
+    public int login(String email, String password) throws WrongUsernameOrPasswordException, SessionCreationException {
         String hash = hashCalculator.calculateHash(password);
-        //manca find by nome e cognome pswhash
-        Optional<Utente> maybePartecipante = utenteRepository.findByNomeCognomePasswordHash(nome, cognome, hash);
+        Optional<Utente> maybePartecipante = utenteRepository.findByEmailPsw(email, hash);
         if (maybePartecipante.isPresent()) {
             Utente p = maybePartecipante.get();
             try {
@@ -40,11 +41,10 @@ public class AuthenticationService {
                 int sessione = sessioneRepository.insertSessione(p.getId());
                 return sessione;
             } catch (SQLException e) {
-                // manca eccezione personalizzata
+
                 throw new SessionCreationException(e);
             }
         } else {
-            // manca eccezione personalizzata
             throw new WrongUsernameOrPasswordException();
         }
     }

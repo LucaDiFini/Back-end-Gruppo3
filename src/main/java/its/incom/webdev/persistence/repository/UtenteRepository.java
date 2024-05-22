@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
 @ApplicationScoped
 public class UtenteRepository {
@@ -70,5 +71,25 @@ public class UtenteRepository {
         }
     }
 
+    //controllare se non servono le altre info dell'utente
+    public Optional<Utente> findByEmailPsw(String email, String passwordHash){
+        try {
+            try (Connection connection = database.getConnection()) {
+                try (PreparedStatement statement = connection.prepareStatement("SELECT id FROM Utente WHERE email = ? AND pswHash = ?")) {
+                    statement.setString(1, email);
+                    statement.setString(2, passwordHash);
+                    var resultSet = statement.executeQuery();
+                    while (resultSet.next()) {
+                        var utente = new Utente();
+                        utente.setId(resultSet.getInt("id"));
+                        return Optional.of(utente);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return Optional.empty();
+    }
 
 }

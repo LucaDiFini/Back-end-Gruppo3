@@ -21,6 +21,9 @@ public class Utente {
         this.dataRegistrazione = dataRegistrazione;
         this.ruolo = ruolo;
     }
+    public Utente(){
+
+    }
 
     public int getId() {
         return id;
