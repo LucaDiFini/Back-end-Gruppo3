@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @ApplicationScoped
@@ -82,14 +83,51 @@ public class UtenteRepository {
                     while (resultSet.next()) {
                         var utente = new Utente();
                         utente.setId(resultSet.getInt("id"));
+                        utente.setEmail(resultSet.getString("email"));
+                        utente.setPasswordHash(resultSet.getString("pswHash"));
                         return Optional.of(utente);
                     }
                 }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
+        }zl
         return Optional.empty();
     }
+
+
+    //serve?
+public Optional<Object> findByNomeCognomePasswordHash(String nome, String cognome, String passwordHash) {
+        String query = "SELECT * FROM Utente WHERE nome = ? AND cognome = ? AND passwordHash = ?";
+
+        try (Connection connection = database.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setString(1, nome);
+            statement.setString(2, cognome);
+            statement.setString(3, passwordHash);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    Utente utente = new Utente();
+                    utente.setId(resultSet.getInt("id"));
+                    utente.setNome(resultSet.getString("nome"));
+                    utente.setCognome(resultSet.getString("cognome"));
+                    utente.setEmail(resultSet.getString("email"));
+                    utente.setPasswordHash(resultSet.getString("passwordHash"));
+                    utente.setDataRegistrazione(resultSet.getObject("dataRegistrazione", LocalDate.class));
+                    //utente.setRuolo(Ruolo.valueOf(resultSet.getString("ruolo")));
+                    return Optional.of(utente);
+                } else {
+                    return Optional.empty();
+                }
+            }
+        } catch (SQLException e) {
+            // Log the exception (use a logging framework or print the stack trace)
+            e.printStackTrace();
+            throw new RuntimeException("Errore durante la ricerca dell'utente", e);
+        }
+    }
+
 
 }

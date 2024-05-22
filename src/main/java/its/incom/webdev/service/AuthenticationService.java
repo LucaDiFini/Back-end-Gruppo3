@@ -15,18 +15,18 @@ import java.util.Optional;
 public class AuthenticationService {
 
     private final UtenteRepository utenteRepository;
-    private final UtenteService utenteService;//utenteservice da fare
+    //private final UtenteService utenteService;//utenteservice da fare
     private final HashCalculator hashCalculator;
     private final SessioneRepository sessioneRepository;
 
     public AuthenticationService(
             UtenteRepository utenteRepository,
-            UtenteService utenteService,
+            //UtenteService utenteService,
             HashCalculator hashCalculator,
             SessioneRepository sessioneRepository
     ) {
         this.utenteRepository = utenteRepository;
-        this.utenteService = utenteService;
+        //this.utenteService = utenteService;
         this.hashCalculator = hashCalculator;
         this.sessioneRepository = sessioneRepository;
     }
@@ -56,11 +56,11 @@ public class AuthenticationService {
 
     //gestire   SQLEXCEPTION
     //manca classe createpartecipanteresponse
-    public CreatePartecipanteResponse getProfile(int sessionId) throws SQLException {
+    /*public CreatePartecipanteResponse getProfile(int sessionId) throws SQLException {
         Sessione s = sessioneRepository.getSessioneById(sessionId);
         int partecianteId = s.getUtenteId();
         //manca metodo getUtenteById
         return utenteService.getUtenteById(partecianteId);
-    }
+    }*/
 }
 

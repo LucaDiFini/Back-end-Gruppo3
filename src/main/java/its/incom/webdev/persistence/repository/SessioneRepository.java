@@ -4,7 +4,9 @@ import its.incom.webdev.persistence.model.Sessione;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import jakarta.enterprise.context.ApplicationScoped;
 
+@ApplicationScoped
 public class SessioneRepository {
 
     private final DataSource database;
