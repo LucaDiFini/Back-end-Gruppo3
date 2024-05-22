@@ -1,5 +1,6 @@
 package its.incom.webdev.service;
 
+import its.incom.webdev.persistence.model.CreateUtenteResponse;
 import its.incom.webdev.persistence.model.Utente;
 import its.incom.webdev.persistence.model.Sessione;
 import its.incom.webdev.persistence.repository.UtenteRepository;
@@ -8,6 +9,7 @@ import its.incom.webdev.service.exception.SessionCreationException;
 import its.incom.webdev.service.exception.WrongUsernameOrPasswordException;
 
 import jakarta.enterprise.context.ApplicationScoped;
+
 import java.sql.SQLException;
 import java.util.Optional;
 
@@ -15,52 +17,58 @@ import java.util.Optional;
 public class AuthenticationService {
 
     private final UtenteRepository utenteRepository;
-    //private final UtenteService utenteService;//utenteservice da fare
+    private final UtenteService utenteService;
     private final HashCalculator hashCalculator;
     private final SessioneRepository sessioneRepository;
 
+    // Costruttore con iniezione delle dipendenze
     public AuthenticationService(
             UtenteRepository utenteRepository,
-            //UtenteService utenteService,
+            UtenteService utenteService,
             HashCalculator hashCalculator,
             SessioneRepository sessioneRepository
     ) {
         this.utenteRepository = utenteRepository;
-        //this.utenteService = utenteService;
+        this.utenteService = utenteService;
         this.hashCalculator = hashCalculator;
         this.sessioneRepository = sessioneRepository;
     }
 
+    // Metodo per effettuare il login
     public int login(String email, String password) throws WrongUsernameOrPasswordException, SessionCreationException {
+        // Calcola l'hash della password
         String hash = hashCalculator.calculateHash(password);
+        // Cerca l'utente nel database
         Optional<Utente> maybePartecipante = utenteRepository.findByEmailPsw(email, hash);
         if (maybePartecipante.isPresent()) {
             Utente p = maybePartecipante.get();
             try {
-                //manca
+                // Crea una nuova sessione per l'utente
                 int sessione = sessioneRepository.insertSessione(p.getId());
                 return sessione;
             } catch (SQLException e) {
-
+                // Gestisce le eccezioni durante la creazione della sessione
                 throw new SessionCreationException(e);
             }
         } else {
+            // Lancia un'eccezione se l'utente non esiste
             throw new WrongUsernameOrPasswordException();
         }
     }
 
-    //gestire   SQLEXCEPTION
+    // Metodo per effettuare il logout
     public void logout(int sessionId) throws SQLException {
+        // Elimina la sessione
         sessioneRepository.deleteSessione(sessionId);
     }
 
-    //gestire   SQLEXCEPTION
-    //manca classe createpartecipanteresponse
-    /*public CreatePartecipanteResponse getProfile(int sessionId) throws SQLException {
+    // Metodo per ottenere il profilo dell'utente
+    public CreateUtenteResponse getProfile(int sessionId) throws SQLException {
+        // Ottiene la sessione
         Sessione s = sessioneRepository.getSessioneById(sessionId);
-        int partecianteId = s.getUtenteId();
-        //manca metodo getUtenteById
-        return utenteService.getUtenteById(partecianteId);
-    }*/
+        // Ottiene l'ID dell'utente dalla sessione
+        int utenteId = s.getUtenteId();
+        // Ottiene l'utente dal servizio Utente
+        return utenteService.getUtenteById(utenteId);
+    }
 }
-

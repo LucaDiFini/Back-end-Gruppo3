@@ -91,12 +91,42 @@ public class UtenteRepository {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        }zl
+        }
         return Optional.empty();
     }
 
+    public Optional<Utente> getUtenteById(int id) {
+        String query = "SELECT * FROM Utente WHERE id = ?";
 
-    //serve?
+        try (Connection connection = database.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setInt(1, id);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    Utente utente = new Utente();
+                    utente.setId(resultSet.getInt("id"));
+                    utente.setNome(resultSet.getString("nome"));
+                    utente.setCognome(resultSet.getString("cognome"));
+                    utente.setEmail(resultSet.getString("email"));
+                    utente.setPasswordHash(resultSet.getString("passwordHash"));
+                    utente.setDataRegistrazione(resultSet.getObject("dataRegistrazione", LocalDate.class));
+
+                    return Optional.of(utente);
+                } else {
+                    return Optional.empty();
+                }
+            }
+        } catch (SQLException e) {
+            // Log the exception (use a logging framework or print the stack trace)
+            e.printStackTrace();
+            throw new RuntimeException("Errore durante la ricerca dell'utente", e);
+        }
+    }
+
+
+    /*
 public Optional<Object> findByNomeCognomePasswordHash(String nome, String cognome, String passwordHash) {
         String query = "SELECT * FROM Utente WHERE nome = ? AND cognome = ? AND passwordHash = ?";
 
@@ -127,7 +157,7 @@ public Optional<Object> findByNomeCognomePasswordHash(String nome, String cognom
             e.printStackTrace();
             throw new RuntimeException("Errore durante la ricerca dell'utente", e);
         }
-    }
+    }*/
 
 
 }
