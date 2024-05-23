@@ -9,7 +9,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.NewCookie;
 import jakarta.ws.rs.core.Response;
 
-import java.sql.SQLException;
+
 
 @Path("/auth")
 public class AuthenticationResource {
@@ -23,10 +23,10 @@ public class AuthenticationResource {
 
     @POST
     @Path("/login")
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(@FormParam("email") String email, @FormParam("password") String password) {
         try {
+            System.out.println("email: " + email + " password: " + password);
             int sessionId = authenticationService.login(email, password);
             NewCookie sessionCookie = new NewCookie("SESSION_ID", String.valueOf(sessionId));
             return Response.ok().cookie(sessionCookie).build();
@@ -38,18 +38,4 @@ public class AuthenticationResource {
     }
 
 
-/* messo tra parentesi quello precedente. La post mi fa username o password errati. Probabilmente perchè non c'è utenteService, ma almeno non mi dà errore500
-    @POST
-    @Path("/login")
-    @Produces()
-    publicResponselogin(@FormParam("email")Stringemail,@FormParam("password")Stringpassword)throwsWrongUsernameOrPasswordException,SessionCreationException{
-        intsessione=0;
-        sessione=authenticationService.login(email,password);
-        NewCookiesessionCookie=newNewCookie.Builder("SESSION_COOKIE").value(String.valueOf(sessione)).build();
-        returnResponse.ok()
-                .cookie(sessionCookie)
-                .build();
-    }
-
-*/
 }

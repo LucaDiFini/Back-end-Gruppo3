@@ -6,7 +6,7 @@ public class CreateUtenteRequest {
     private String cognome;
     private String email;
     private String password;
-    private Ruolo ruolo;
+
 
     public String getNome() {
         return nome;
@@ -40,7 +40,5 @@ public class CreateUtenteRequest {
         this.password = password;
     }
 
-    public Ruolo getRuolo() {
-        return ruolo;
-    }
+
 }

@@ -37,7 +37,9 @@ public class AuthenticationService {
     // Metodo per effettuare il login
     public int login(String email, String password) throws WrongUsernameOrPasswordException, SessionCreationException {
         // Calcola l'hash della password
+        //PASSIAMO PSW NULL
         String hash = hashCalculator.calculateHash(password);
+        System.out.println("psw hash "+hash);
         // Cerca l'utente nel database
         Optional<Utente> maybePartecipante = utenteRepository.findByEmailPsw(email, hash);
         if (maybePartecipante.isPresent()) {
@@ -67,7 +69,7 @@ public class AuthenticationService {
         // Ottiene la sessione
         Sessione s = sessioneRepository.getSessioneById(sessionId);
         // Ottiene l'ID dell'utente dalla sessione
-        int utenteId = s.getUtenteId();
+        int utenteId = s.getId_utente();
         // Ottiene l'utente dal servizio Utente
         return utenteService.getUtenteById(utenteId);
     }
