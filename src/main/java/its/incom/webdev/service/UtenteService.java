@@ -1,14 +1,17 @@
 package its.incom.webdev.service;
 
 
+import its.incom.webdev.persistence.model.CreateUtenteRequest;
 import its.incom.webdev.persistence.model.CreateUtenteResponse;
 
+import its.incom.webdev.persistence.model.Ruolo;
 import its.incom.webdev.persistence.model.Utente;
 
 import its.incom.webdev.persistence.repository.UtenteRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Optional;
 @ApplicationScoped
 public class UtenteService {
@@ -45,5 +48,16 @@ public class UtenteService {
             // Potrebbe essere lanciando un'eccezione o restituendo un valore predefinito
             throw new SQLException("Utente non trovato con id: " + id_utente);
         }
+    }
+
+    public Utente ConvertRequestToUtente(CreateUtenteRequest cur){
+        Utente u=new Utente();
+        u.setEmail(cur.getEmail());
+        u.setNome(cur.getNome());
+        u.setPasswordHash(hashCalculator.calculateHash(cur.getPassword()));
+        u.setCognome(cur.getCognome());
+        u.setRuolo(Ruolo.S);
+        u.setDataRegistrazione(LocalDate.now());
+        return u;
     }
 }

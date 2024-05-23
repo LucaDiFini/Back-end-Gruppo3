@@ -12,17 +12,14 @@ public class Utente {
     private Ruolo ruolo;
 
 
-    public Utente(String nome, int id, String cognome, String passwordHash, String email, LocalDate dataRegistrazione, Ruolo ruolo) {
+    public Utente(String nome, String cognome, String passwordHash, String email) {
         this.nome = nome;
-        this.id = id;
         this.cognome = cognome;
         this.passwordHash = passwordHash;
         this.email = email;
-        this.dataRegistrazione = dataRegistrazione;
-
+        this.dataRegistrazione = LocalDate.now();
     }
     public Utente(){
-
     }
 
     public int getId() {
@@ -87,5 +84,9 @@ public class Utente {
                 ", cognome='" + cognome + '\'' +
                 ", passwordHash='" + passwordHash + '\'' +
                 '}';
+    }
+
+    public void setRuolo(Ruolo ruolo) {
+        this.ruolo = ruolo;
     }
 }

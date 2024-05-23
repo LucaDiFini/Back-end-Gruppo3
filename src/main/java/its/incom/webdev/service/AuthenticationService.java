@@ -37,7 +37,6 @@ public class AuthenticationService {
     // Metodo per effettuare il login
     public int login(String email, String password) throws WrongUsernameOrPasswordException, SessionCreationException {
         // Calcola l'hash della password
-        //PASSIAMO PSW NULL
         String hash = hashCalculator.calculateHash(password);
         System.out.println("psw hash "+hash);
         // Cerca l'utente nel database

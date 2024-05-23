@@ -26,7 +26,7 @@ public class UtenteRepository {
             throw new BadRequestException("Utente già esistente");
         }
 
-        String query = "INSERT INTO Utente (nome, cognome, email, passwordHash, dataRegistrazione, ruolo) VALUES (?, ?, ?, ?, ?, 'S')";
+        String query = "INSERT INTO Utente (nome, cognome, email, pswHash, data_registrazione, ruolo) VALUES (?, ?, ?, ?, ?, 'S')";
         try (Connection connection = database.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
 
@@ -35,7 +35,6 @@ public class UtenteRepository {
             statement.setString(3, utente.getEmail());
             statement.setString(4, utente.getPasswordHash());
             statement.setObject(5, utente.getDataRegistrazione());
-            //statement.setObject(6, utente.getRuolo().name());
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -49,11 +48,12 @@ public class UtenteRepository {
 
 
     private boolean checkUtente(String email, String pswHash) {
+        System.out.println("1)");
         String query = "SELECT COUNT(*) FROM Utente WHERE email = ? AND pswHash = ?";
 
         try (Connection connection = database.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
-
+            System.out.println("ciao");
             statement.setString(1, email);
             statement.setString(2, pswHash);
 
