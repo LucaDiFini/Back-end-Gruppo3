@@ -1,7 +1,7 @@
 package its.incom.webdev.rest;
 
 import its.incom.webdev.persistence.model.CreateUtenteRequest;
-import its.incom.webdev.persistence.model.Ruolo;
+
 import its.incom.webdev.persistence.model.Utente;
 import its.incom.webdev.persistence.repository.UtenteRepository;
 import its.incom.webdev.service.AuthenticationService;
@@ -15,6 +15,7 @@ import jakarta.ws.rs.core.NewCookie;
 import jakarta.ws.rs.core.Response;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
 
 @Path("/auth")
@@ -53,7 +54,17 @@ public class AuthenticationResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response register(CreateUtenteRequest cur) {
         try {
-            Utente u=utenteService.ConvertRequestToUtente(cur);
+            // Controlla se esiste già un utente con la stessa email
+            Optional<Utente> existingUser = utenteRepository.findByEmailPsw(cur.getEmail(), hashCalculator.calculateHash(cur.getPassword()));
+            if (existingUser.isPresent()) {
+                // Se esiste, restituisci un messaggio JSON appropriato
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("{\"message\": \"Utente già presente\"}")
+                        .build();
+            }
+
+            // Se non esiste, crea un nuovo utente
+            Utente u = utenteService.ConvertRequestToUtente(cur);
             Utente u1 = utenteRepository.createUtente(u);
             return Response.status(Response.Status.CREATED)
                     .entity(u1)
