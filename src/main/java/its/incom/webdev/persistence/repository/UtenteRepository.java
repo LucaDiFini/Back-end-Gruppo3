@@ -92,6 +92,26 @@ public class UtenteRepository {
         }
         return Optional.empty();
     }
+    public Optional<Utente> findByEmail(String email) {
+        try {
+            try (Connection connection = database.getConnection()) {
+                try (PreparedStatement statement = connection.prepareStatement("SELECT id,email,pswHash FROM Utente WHERE email = ?")) {
+                    statement.setString(1, email);
+                    var resultSet = statement.executeQuery();
+                    while (resultSet.next()) {
+                        var utente = new Utente();
+                        utente.setId(resultSet.getInt("id"));
+                        utente.setEmail(resultSet.getString("email"));
+                        utente.setPasswordHash(resultSet.getString("pswHash"));
+                        return Optional.of(utente);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return Optional.empty();
+    }
 
     public Optional<Utente> getUtenteById(int id) {
         String query = "SELECT * FROM Utente WHERE id = ?";

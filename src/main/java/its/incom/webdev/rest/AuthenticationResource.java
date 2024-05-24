@@ -25,16 +25,15 @@ public class AuthenticationResource {
     private final UtenteRepository utenteRepository;
     private final AuthenticationService authenticationService;
     private final HashCalculator hashCalculator;
-    private final CorsoRepository corsoRepository;
+
 
     private final UtenteService utenteService;
 
-    public AuthenticationResource(UtenteRepository utenteRepository, AuthenticationService authenticationService, HashCalculator hashCalculator, UtenteService utenteService, CorsoRepository corsoRepository) {
+    public AuthenticationResource(UtenteRepository utenteRepository, AuthenticationService authenticationService, HashCalculator hashCalculator, UtenteService utenteService) {
         this.utenteRepository = utenteRepository;
         this.authenticationService = authenticationService;
         this.hashCalculator = hashCalculator;
         this.utenteService = utenteService;
-        this.corsoRepository = corsoRepository;
     }
 
     @POST
@@ -70,7 +69,7 @@ public class AuthenticationResource {
     public Response register(CreateUtenteRequest cur) {
         try {
             // Controlla se esiste già un utente con la stessa email
-            Optional<Utente> existingUser = utenteRepository.findByEmailPsw(cur.getEmail(), hashCalculator.calculateHash(cur.getPassword()));
+            Optional<Utente> existingUser = utenteRepository.findByEmail(cur.getEmail());
             if (existingUser.isPresent()) {
                 // Se esiste, restituisci un messaggio JSON appropriato
                 return Response.status(Response.Status.BAD_REQUEST)
@@ -89,15 +88,5 @@ public class AuthenticationResource {
                     .entity("Errore del server, la registrazione non è andata a buon fine")
                     .build();
         }
-    }
-
-    @GET
-    @Path("/corso/{categoria}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getCorsoByCategoria(@PathParam("categoria") String categoria) {
-
-        return Response.status(Response.Status.OK)
-                .entity(corsoRepository.getCorsiByCategoria(categoria))
-                .build();
     }
 }
