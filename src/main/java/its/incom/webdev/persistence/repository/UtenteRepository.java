@@ -47,12 +47,10 @@ public class UtenteRepository {
 
 
     private boolean checkUtente(String email, String pswHash) {
-        System.out.println("1)");
         String query = "SELECT COUNT(*) FROM Utente WHERE email = ? AND pswHash = ?";
 
         try (Connection connection = database.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
-            System.out.println("ciao");
             statement.setString(1, email);
             statement.setString(2, pswHash);
 

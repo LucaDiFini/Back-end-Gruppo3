@@ -43,5 +43,12 @@ public class Sessione {
         this.id_utente = id_utente;
     }
 
-
+    @Override
+    public String toString() {
+        return "Sessione{" +
+                "id=" + id +
+                ", data=" + data +
+                ", id_utente=" + id_utente +
+                '}';
+    }
 }

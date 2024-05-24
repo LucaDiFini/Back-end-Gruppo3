@@ -2,9 +2,10 @@ package its.incom.webdev.persistence.model;
 
 public class Candidatura {
     private int id;
-    private int id_user;
+    private int id_utente;
     private int id_corso;
     private boolean passato;
+
 
 
     public int getId() {
@@ -15,12 +16,12 @@ public class Candidatura {
         this.id = id;
     }
 
-    public int getId_user() {
-        return id_user;
+    public int getId_utente() {
+        return id_utente;
     }
 
-    public void setId_user(int id_user) {
-        this.id_user = id_user;
+    public void setId_utente(int id_user) {
+        this.id_utente = id_user;
     }
 
     public int getId_corso() {
@@ -43,8 +44,7 @@ public class Candidatura {
     @Override
     public String toString() {
         return "Candidatura{" +
-                "id=" + id +
-                ", id_user=" + id_user +
+                ", id_utente=" + id_utente +
                 ", id_corso=" + id_corso +
                 ", passato=" + passato +
                 '}';

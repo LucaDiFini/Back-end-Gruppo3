@@ -24,15 +24,13 @@ import java.util.Optional;
 public class AuthenticationResource {
     private final UtenteRepository utenteRepository;
     private final AuthenticationService authenticationService;
-    private final HashCalculator hashCalculator;
 
 
     private final UtenteService utenteService;
 
-    public AuthenticationResource(UtenteRepository utenteRepository, AuthenticationService authenticationService, HashCalculator hashCalculator, UtenteService utenteService) {
+    public AuthenticationResource(UtenteRepository utenteRepository, AuthenticationService authenticationService, UtenteService utenteService) {
         this.utenteRepository = utenteRepository;
         this.authenticationService = authenticationService;
-        this.hashCalculator = hashCalculator;
         this.utenteService = utenteService;
     }
 
@@ -55,11 +53,9 @@ public class AuthenticationResource {
     @Path("/profile")
     public CreateUtenteResponse getProfile(@CookieParam("SESSION_ID") @DefaultValue("-1") int sessionId) throws WrongUsernameOrPasswordException, SQLException {
         if (sessionId == -1) {
-            System.out.println("ERRORE AuthenticationResource,ciao");
+            //eccezione personalizzata notLogged
             throw new WrongUsernameOrPasswordException();
         }
-        System.out.println("ciao");
-
         return authenticationService.getProfile(sessionId);
     }
 
