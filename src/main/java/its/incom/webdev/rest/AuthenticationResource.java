@@ -3,6 +3,7 @@ package its.incom.webdev.rest;
 import its.incom.webdev.persistence.model.CreateUtenteRequest;
 
 import its.incom.webdev.persistence.model.Utente;
+import its.incom.webdev.persistence.repository.CorsoRepository;
 import its.incom.webdev.persistence.repository.UtenteRepository;
 import its.incom.webdev.service.AuthenticationService;
 import its.incom.webdev.service.HashCalculator;
@@ -23,14 +24,16 @@ public class AuthenticationResource {
     private final UtenteRepository utenteRepository;
     private final AuthenticationService authenticationService;
     private final HashCalculator hashCalculator;
+    private final CorsoRepository corsoRepository;
 
     private final UtenteService utenteService;
 
-    public AuthenticationResource(UtenteRepository utenteRepository, AuthenticationService authenticationService, HashCalculator hashCalculator, UtenteService utenteService) {
+    public AuthenticationResource(UtenteRepository utenteRepository, AuthenticationService authenticationService, HashCalculator hashCalculator, UtenteService utenteService, CorsoRepository corsoRepository) {
         this.utenteRepository = utenteRepository;
         this.authenticationService = authenticationService;
         this.hashCalculator = hashCalculator;
         this.utenteService = utenteService;
+        this.corsoRepository = corsoRepository;
     }
 
     @POST
@@ -74,5 +77,15 @@ public class AuthenticationResource {
                     .entity("Errore del server, la registrazione non è andata a buon fine")
                     .build();
         }
+    }
+
+    @GET
+    @Path("/corso/{categoria}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCorsoByCategoria(@PathParam("categoria") String categoria) {
+
+        return Response.status(Response.Status.OK)
+                .entity(corsoRepository.getCorsiByCategoria(categoria))
+                .build();
     }
 }

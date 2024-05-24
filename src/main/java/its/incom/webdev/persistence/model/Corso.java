@@ -9,10 +9,15 @@ public class Corso {
     private LocalDate dataInizio;
     private LocalDate dataFine;
 
+    public Corso() {
+    }
 
+
+    /*
+    TOLTO PERCHE' NON SERVE NELLA STAMPA PER ORA
     public int getId() {
         return id;
-    }
+    }*/
 
     public void setId(int id) {
         this.id = id;
@@ -52,8 +57,7 @@ public class Corso {
 
     @Override
     public String toString() {
-        return "Corso{" +
-                "id=" + id +
+        return "Corso{" + "id=" + id +
                 ", nome='" + nome + '\'' +
                 ", categoria=" + categoria +
                 ", dataInizio=" + dataInizio +

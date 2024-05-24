@@ -79,7 +79,6 @@ public class Utente {
     @Override
     public String toString() {
         return "Utente{" +
-                "id=" + id +
                 ", nome='" + nome + '\'' +
                 ", cognome='" + cognome + '\'' +
                 ", passwordHash='" + passwordHash + '\'' +
