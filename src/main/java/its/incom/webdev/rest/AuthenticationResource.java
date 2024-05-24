@@ -2,6 +2,7 @@ package its.incom.webdev.rest;
 
 import its.incom.webdev.persistence.model.CreateUtenteRequest;
 
+import its.incom.webdev.persistence.model.CreateUtenteResponse;
 import its.incom.webdev.persistence.model.Utente;
 import its.incom.webdev.persistence.repository.CorsoRepository;
 import its.incom.webdev.persistence.repository.UtenteRepository;
@@ -50,6 +51,17 @@ public class AuthenticationResource {
         } catch (SessionCreationException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error creating session").build();
         }
+    }
+    @GET
+    @Path("/profile")
+    public CreateUtenteResponse getProfile(@CookieParam("SESSION_ID") @DefaultValue("-1") int sessionId) throws WrongUsernameOrPasswordException, SQLException {
+        if (sessionId == -1) {
+            System.out.println("ERRORE AuthenticationResource,ciao");
+            throw new WrongUsernameOrPasswordException();
+        }
+        System.out.println("ciao");
+
+        return authenticationService.getProfile(sessionId);
     }
 
     @POST

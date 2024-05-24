@@ -20,7 +20,6 @@ public class UtenteRepository {
     public UtenteRepository(DataSource database) {
         this.database = database;
     }
-
     public Utente createUtente(Utente utente) throws SQLException {
         if (checkUtente(utente.getEmail(), utente.getPasswordHash())) {
             throw new BadRequestException("Utente già esistente");
@@ -38,7 +37,6 @@ public class UtenteRepository {
 
             statement.executeUpdate();
         } catch (SQLException e) {
-            // Log the exception (use a logging framework or print the stack trace)
             e.printStackTrace();
             throw new RuntimeException("Errore durante la creazione dell'utente", e);
         }

@@ -63,13 +63,16 @@ public class AuthenticationService {
         sessioneRepository.deleteSessione(sessionId);
     }
 
-    // Metodo per ottenere il profilo dell'utente
     public CreateUtenteResponse getProfile(int sessionId) throws SQLException {
-        // Ottiene la sessione
+        //1. Recuperare la sessione dal database
         Sessione s = sessioneRepository.getSessioneById(sessionId);
-        // Ottiene l'ID dell'utente dalla sessione
+        //2. Recuperare l'id partecipante della sessione
         int utenteId = s.getId_utente();
-        // Ottiene l'utente dal servizio Utente
-        return utenteService.getUtenteById(utenteId);
+        //3. Recupero il partecipante dal database
+        try {
+            return utenteService.getUtenteById(utenteId);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
