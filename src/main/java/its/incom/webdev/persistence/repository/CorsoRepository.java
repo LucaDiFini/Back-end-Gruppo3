@@ -50,4 +50,26 @@ public class CorsoRepository {
         }
         return null;
     }
+
+    public List<Corso> getCorsi() throws SQLException {
+        ArrayList<Corso> corsi = new ArrayList<>();
+        String query = "SELECT nome, categoria, data_inizio, data_fine FROM Corso";
+        try (Connection connection = database.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+
+                while (resultSet.next()) {
+
+                    Corso corso = new Corso();
+                    corso.setNome(resultSet.getString("nome"));
+                    corso.setCategoria(Categoria.valueOf(resultSet.getString("categoria")));
+                    corso.setDataInizio(resultSet.getDate("data_inizio").toLocalDate());
+                    corso.setDataFine(resultSet.getDate("data_fine").toLocalDate());
+
+                    corsi.add(corso);
+                }
+                return corsi;
+            }
+        }
+    }
 }

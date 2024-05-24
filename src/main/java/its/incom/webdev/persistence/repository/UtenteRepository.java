@@ -20,6 +20,7 @@ public class UtenteRepository {
     public UtenteRepository(DataSource database) {
         this.database = database;
     }
+
     public Utente createUtente(Utente utente) throws SQLException {
         if (checkUtente(utente.getEmail(), utente.getPasswordHash())) {
             throw new BadRequestException("Utente già esistente");
@@ -92,6 +93,7 @@ public class UtenteRepository {
         }
         return Optional.empty();
     }
+
     public Optional<Utente> findByEmail(String email) {
         try {
             try (Connection connection = database.getConnection()) {
