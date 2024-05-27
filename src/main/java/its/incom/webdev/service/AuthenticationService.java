@@ -43,6 +43,7 @@ public class AuthenticationService {
         Optional<Utente> maybePartecipante = utenteRepository.findByEmailPsw(email, hash);
         if (maybePartecipante.isPresent()) {
             Utente p = maybePartecipante.get();
+            System.out.println("ruolo:"+p.getRuolo());
             try {
                 // Crea una nuova sessione per l'utente
                 int sessione = sessioneRepository.insertSessione(p.getId());
