@@ -72,4 +72,23 @@ public class CorsoRepository {
             }
         }
     }
+    public Corso getCorsoById(int id) throws SQLException {
+        String query = "SELECT nome, categoria, data_inizio, data_fine FROM Corso WHERE id=?";
+        try (Connection connection = database.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, id);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+
+                    Corso corso = new Corso();
+                    corso.setNome(resultSet.getString("nome"));
+                    corso.setCategoria(Categoria.valueOf(resultSet.getString("categoria")));
+                    corso.setDataInizio(resultSet.getDate("data_inizio").toLocalDate());
+                    corso.setDataFine(resultSet.getDate("data_fine").toLocalDate());
+                    return corso;
+                }
+            }
+        }
+        return null;
+    }
 }

@@ -11,6 +11,7 @@ import its.incom.webdev.service.HashCalculator;
 import its.incom.webdev.service.UtenteService;
 import its.incom.webdev.service.exception.SessionCreationException;
 import its.incom.webdev.service.exception.WrongUsernameOrPasswordException;
+import jakarta.json.JsonObject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.NewCookie;
@@ -36,8 +37,11 @@ public class AuthenticationResource {
 
     @POST
     @Path("/login")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response login(@FormParam("email") String email, @FormParam("password") String password) {
+    public Response login(JsonObject loginRequest) {
+        String email = loginRequest.getString("email");
+        String password = loginRequest.getString("password");
         try {
             System.out.println("email: " + email + " password: " + password);
             int sessionId = authenticationService.login(email, password);

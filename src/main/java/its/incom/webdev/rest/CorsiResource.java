@@ -26,6 +26,16 @@ public class CorsiResource {
     }
 
     @GET
+    @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCorsoById(@PathParam("id") int id) throws SQLException {
+
+        return Response.status(Response.Status.OK)
+                .entity(corsoRepository.getCorsoById(id))
+                .build();
+    }
+
+    @GET
     @Path("{categoria}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCorsoByCategoria(@PathParam("categoria") String categoria) {
@@ -42,31 +52,5 @@ public class CorsiResource {
         return Response.status(Response.Status.OK)
                 .entity(corsoRepository.getCorsi())
                 .build();
-    }
-
-    @POST
-    @Path("/candidatura/{corsoId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response setCandidatura(@CookieParam("SESSION_ID") @DefaultValue("-1") int sessioneId,@PathParam("corsoId") int corsoId) throws WrongUsernameOrPasswordException {
-        //controllare se l'utente è loggato
-        if (sessioneId == -1) {
-            //eccezione personalizzata notLogged
-            throw new WrongUsernameOrPasswordException();
-        }
-        try {
-            //prendere l'id del utente
-            CreateUtenteResponse cur =authenticationService.getProfile(sessioneId);
-            //creare iscrizione con id utente e id corso
-
-            return Response.status(Response.Status.CREATED)
-                    .entity(
-                            //errore qui
-                            candidaturaRepository.createCandidatura(cur.getId(),corsoId))
-                    .build();
-        } catch (SQLException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("Errore del server, la candidatura non è andata a buon fine")
-                    .build();
-        }
     }
 }
