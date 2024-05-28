@@ -4,9 +4,7 @@ public class Candidatura {
     private int id;
     private int id_utente;
     private int id_corso;
-    private boolean passato;
-
-
+    private EsitoCandidatura esito;
 
     public int getId() {
         return id;
@@ -32,12 +30,12 @@ public class Candidatura {
         this.id_corso = id_corso;
     }
 
-    public boolean isPassato() {
-        return passato;
+    public EsitoCandidatura getEsito() {
+        return esito;
     }
 
-    public void setPassato(boolean passato) {
-        this.passato = passato;
+    public void setEsito(EsitoCandidatura passato) {
+        this.esito = passato;
     }
 
 
@@ -46,7 +44,7 @@ public class Candidatura {
         return "Candidatura{" +
                 ", id_utente=" + id_utente +
                 ", id_corso=" + id_corso +
-                ", passato=" + passato +
+                ", esito=" + esito +
                 '}';
     }
 }

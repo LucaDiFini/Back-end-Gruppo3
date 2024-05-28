@@ -4,7 +4,7 @@ public class CandidaturaResponse {
     private int id_candidatura;
     private int id_utente;
     private int id_corso;
-    private boolean passato;
+    private EsitoCandidatura esito;
     private String nome_utente;
     private String cognome_utente;
     private String nome_corso;
@@ -13,11 +13,11 @@ public class CandidaturaResponse {
     }
 
 
-    public CandidaturaResponse(int id_candidatura, int id_utente, int id_corso, boolean passato_candidatura, String nome_utente, String cognome_utente) {
+        public CandidaturaResponse(int id_candidatura, int id_utente, int id_corso, EsitoCandidatura passato_candidatura, String nome_utente, String cognome_utente) {
         this.id_candidatura = id_candidatura;
         this.id_utente = id_utente;
         this.id_corso = id_corso;
-        this.passato = passato_candidatura;
+        this.esito = passato_candidatura;
         this.nome_utente = nome_utente;
         this.cognome_utente = cognome_utente;
     }
@@ -46,12 +46,12 @@ public class CandidaturaResponse {
         this.id_corso = id_corso;
     }
 
-    public boolean isPassato() {
-        return passato;
+    public EsitoCandidatura getEsito() {
+        return esito;
     }
 
-    public void setPassato(boolean passato_candidatura) {
-        this.passato = passato_candidatura;
+    public void setEsito(EsitoCandidatura esito) {
+        this.esito = esito;
     }
 
     public String getNome_utente() {

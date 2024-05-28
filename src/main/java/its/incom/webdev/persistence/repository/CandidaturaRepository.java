@@ -1,9 +1,6 @@
 package its.incom.webdev.persistence.repository;
 
-import its.incom.webdev.persistence.model.Candidatura;
-import its.incom.webdev.persistence.model.CandidaturaResponse;
-import its.incom.webdev.persistence.model.Categoria;
-import its.incom.webdev.persistence.model.Corso;
+import its.incom.webdev.persistence.model.*;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.BadRequestException;
 
@@ -30,7 +27,7 @@ public class CandidaturaRepository {
             throw new BadRequestException("Candidatura già inviata");
         }
 
-        String query = "INSERT INTO Candidatura (id_utente,id_corso) VALUES (?, ?)";
+        String query = "INSERT INTO Candidatura (id_utente,id_corso,esito) VALUES (?, ?,'In Attesa')";
         try (Connection connection = database.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, idUtente);
@@ -70,7 +67,7 @@ public class CandidaturaRepository {
 
     public List<CandidaturaResponse> getCandidature() throws SQLException {
         ArrayList<CandidaturaResponse> candidature = new ArrayList<>();
-        String query = "SELECT c.id, c.id_utente, c.id_corso, c.passato,u.nome,u.cognome,c2.nome " +
+        String query = "SELECT c.id, c.id_utente, c.id_corso, c.esito,u.nome,u.cognome,c2.nome " +
                        "FROM Candidatura AS c JOIN Corso AS c2 ON c.id_corso=c2.id JOIN Utente AS u ON c.id_utente=u.id";
 
         try (Connection connection = database.getConnection();
@@ -83,7 +80,11 @@ public class CandidaturaRepository {
                     candidatura.setId_candidatura(resultSet.getInt("c.id"));
                     candidatura.setId_utente(resultSet.getInt("c.id_utente"));
                     candidatura.setId_corso(resultSet.getInt("c.id_corso"));
-                    candidatura.setPassato(resultSet.getBoolean("c.passato"));
+                    //prendo l'esito in stringa la formatto per ENUM di Java
+                    String esitoStr = resultSet.getString("c.esito");
+                    EsitoCandidatura esito = EsitoCandidatura.valueOf(esitoStr.replace(' ', '_').toUpperCase());
+                    candidatura.setEsito(esito);
+
                     candidatura.setNome_utente(resultSet.getString("u.nome"));
                     candidatura.setCognome_utente(resultSet.getString("u.cognome"));
                     candidatura.setNome_corso(resultSet.getString("c2.nome"));
@@ -97,7 +98,7 @@ public class CandidaturaRepository {
     }
 
     public CandidaturaResponse getCandidatura(int id) throws SQLException {
-        String query = "SELECT c.id_utente, c.id_corso, c.passato,u.nome,u.cognome,c2.nome " +
+        String query = "SELECT c.id_utente, c.id_corso, c.esito,u.nome,u.cognome,c2.nome " +
                 "FROM Candidatura AS c JOIN Corso AS c2 ON c.id_corso=c2.id JOIN Utente AS u ON c.id_utente=u.id WHERE c.id=?";
 
         try (Connection connection = database.getConnection();
@@ -110,7 +111,9 @@ public class CandidaturaRepository {
                     candidatura.setId_candidatura(id);
                     candidatura.setId_utente(resultSet.getInt("c.id_utente"));
                     candidatura.setId_corso(resultSet.getInt("c.id_corso"));
-                    candidatura.setPassato(resultSet.getBoolean("c.passato"));
+                    String esitoStr = resultSet.getString("c.esito");
+                    EsitoCandidatura esito = EsitoCandidatura.valueOf(esitoStr.replace(' ', '_').toUpperCase());
+                    candidatura.setEsito(esito);
                     candidatura.setNome_utente(resultSet.getString("u.nome"));
                     candidatura.setCognome_utente(resultSet.getString("u.cognome"));
                     candidatura.setNome_corso(resultSet.getString("c2.nome"));
@@ -120,5 +123,34 @@ public class CandidaturaRepository {
             }
         }
         return null;
+    }
+
+    public List<CandidaturaResponse>  getCandidatureByUtente(int id) throws SQLException {
+        List<CandidaturaResponse> list=new ArrayList<>();
+        String query = "SELECT c.id,c.id_utente, c.id_corso, c.esito,u.nome,u.cognome,c2.nome " +
+                "FROM Candidatura AS c JOIN Corso AS c2 ON c.id_corso=c2.id JOIN Utente AS u ON c.id_utente=u.id WHERE u.id=?";
+
+        try (Connection connection = database.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+
+                while (resultSet.next()) {
+                    CandidaturaResponse candidatura = new CandidaturaResponse();
+                    candidatura.setId_candidatura(resultSet.getInt("c.id"));
+                    candidatura.setId_utente(resultSet.getInt("c.id_utente"));
+                    candidatura.setId_corso(resultSet.getInt("c.id_corso"));
+
+                    String esitoStr = resultSet.getString("c.esito");
+                    EsitoCandidatura esito = EsitoCandidatura.valueOf(esitoStr.replace(' ', '_').toUpperCase());
+                    candidatura.setEsito(esito);
+                    candidatura.setNome_utente(resultSet.getString("u.nome"));
+                    candidatura.setCognome_utente(resultSet.getString("u.cognome"));
+                    candidatura.setNome_corso(resultSet.getString("c2.nome"));
+                    list.add(candidatura);
+                }
+                return list;
+            }
+        }
     }
 }
