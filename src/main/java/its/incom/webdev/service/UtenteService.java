@@ -1,26 +1,26 @@
 package its.incom.webdev.service;
 
 
-import its.incom.webdev.persistence.model.CreateUtenteRequest;
-import its.incom.webdev.persistence.model.CreateUtenteResponse;
+import its.incom.webdev.persistence.model.*;
 
-import its.incom.webdev.persistence.model.Ruolo;
-import its.incom.webdev.persistence.model.Utente;
-
+import its.incom.webdev.persistence.repository.SessioneRepository;
 import its.incom.webdev.persistence.repository.UtenteRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 @ApplicationScoped
 public class UtenteService {
 
+    private final SessioneRepository sessioneRepository;
     private final UtenteRepository utenteRepository;
     private final HashCalculator hashCalculator;
 
     // Costruttore con iniezione delle dipendenze
-    public UtenteService(UtenteRepository utenteRepository, HashCalculator hashCalculator) {
+    public UtenteService(SessioneRepository sessioneRepository, UtenteRepository utenteRepository, HashCalculator hashCalculator) {
+        this.sessioneRepository = sessioneRepository;
         this.utenteRepository = utenteRepository;
         this.hashCalculator = hashCalculator;
     }
@@ -59,5 +59,28 @@ public class UtenteService {
         u.setRuolo(Ruolo.S);
         u.setDataRegistrazione(LocalDate.now());
         return u;
+    }
+
+    public List<Utente> getAllUtenti(){
+        //chiamata select
+        return utenteRepository.getUtenti();
+    }
+
+    public void setRuoloOfUser(int id,String ruolo){
+        utenteRepository.setRuolo(id,ruolo);
+    }
+
+    public  boolean isAdmin(int sessionId){
+        try {
+            Sessione s=sessioneRepository.getSessioneById(sessionId);
+            Optional<Utente> utente=utenteRepository.getUtenteById(s.getId_utente());
+            if(utente.get().getRuolo()==Ruolo.A){
+                return true;
+            }else{
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

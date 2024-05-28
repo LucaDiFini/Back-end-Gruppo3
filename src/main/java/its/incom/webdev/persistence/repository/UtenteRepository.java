@@ -1,15 +1,20 @@
 package its.incom.webdev.persistence.repository;
 
+import its.incom.webdev.persistence.model.EsitoCandidatura;
+import its.incom.webdev.persistence.model.Ruolo;
 import its.incom.webdev.persistence.model.Utente;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.BadRequestException;
 
 import javax.sql.DataSource;
+import javax.sql.XAConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @ApplicationScoped
@@ -130,6 +135,8 @@ public class UtenteRepository {
                     utente.setEmail(resultSet.getString("email"));
                     utente.setPasswordHash(resultSet.getString("pswHash"));
                     utente.setDataRegistrazione(resultSet.getObject("data_registrazione", LocalDate.class));
+                    Ruolo ruolo = Ruolo.valueOf(resultSet.getString("ruolo").toUpperCase());
+                    utente.setRuolo(ruolo);
 
                     return Optional.of(utente);
                 } else {
@@ -140,6 +147,50 @@ public class UtenteRepository {
             // Log the exception (use a logging framework or print the stack trace)
             e.printStackTrace();
             throw new RuntimeException("Errore durante la ricerca dell'utente", e);
+        }
+    }
+    public List<Utente> getUtenti(){
+        List<Utente> list=new ArrayList<>();
+        String query = "SELECT id,nome,cognome,email,data_registrazione,ruolo FROM Utente";
+
+        try (Connection connection = database.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while(resultSet.next()) {
+                    Utente utente = new Utente();
+                    utente.setId(resultSet.getInt("id"));
+                    utente.setNome(resultSet.getString("nome"));
+                    utente.setCognome(resultSet.getString("cognome"));
+                    utente.setEmail(resultSet.getString("email"));
+                    utente.setDataRegistrazione(resultSet.getObject("data_registrazione", LocalDate.class));
+                    //prendo l'esito in stringa la formatto per ENUM di Java
+                    Ruolo ruolo = Ruolo.valueOf(resultSet.getString("ruolo").toUpperCase());
+                    utente.setRuolo(ruolo);
+                    list.add(utente);
+                }return list;
+            }
+        } catch (SQLException e) {
+            // Log the exception (use a logging framework or print the stack trace)
+            e.printStackTrace();
+            throw new RuntimeException("Errore durante la selezione degli utenti", e);
+        }
+    }
+    public void setRuolo(int id,String ruolo){
+        String query = "UPDATE Utente SET ruolo = ? WHERE id = ?";
+
+        try (Connection connection = database.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, ruolo);
+            statement.setInt(2, id);
+            int rowsUpdated = statement.executeUpdate();
+            if (rowsUpdated == 0) {
+                //eccezione personalizzata mancante
+                throw new RuntimeException("Nessun utente trovato con l'ID specificato");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Errore durante l'aggiornamento dell'utente", e);
         }
     }
 
