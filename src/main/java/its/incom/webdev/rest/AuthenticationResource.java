@@ -43,7 +43,6 @@ public class AuthenticationResource {
         String email = loginRequest.getString("email");
         String password = loginRequest.getString("password");
         try {
-            System.out.println("email: " + email + " password: " + password);
             int sessionId = authenticationService.login(email, password);
             NewCookie sessionCookie = new NewCookie("SESSION_ID", String.valueOf(sessionId));
             //prendi utente da sessione Id
@@ -56,15 +55,7 @@ public class AuthenticationResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error creating session").build();
         }
     }
-    @GET
-    @Path("/profile")
-    public CreateUtenteResponse getProfile(@CookieParam("SESSION_ID") @DefaultValue("-1") int sessionId) throws WrongUsernameOrPasswordException, SQLException {
-        if (sessionId == -1) {
-            //eccezione personalizzata notLogged
-            throw new WrongUsernameOrPasswordException();
-        }
-        return authenticationService.getProfile(sessionId);
-    }
+
 
     @POST
     @Path("/register")

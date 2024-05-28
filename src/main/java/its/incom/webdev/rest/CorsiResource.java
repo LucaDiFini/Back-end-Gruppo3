@@ -36,10 +36,10 @@ public class CorsiResource {
     }
 
     @GET
-    @Path("{categoria}")
+    @Path("/tipologia/{categoria}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCorsoByCategoria(@PathParam("categoria") String categoria) {
-
+        System.out.println("ciao");
         return Response.status(Response.Status.OK)
                 .entity(corsoRepository.getCorsiByCategoria(categoria))
                 .build();

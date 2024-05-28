@@ -37,6 +37,7 @@ public class CorsoRepository {
                     corso.setCategoria(Categoria.valueOf(resultSet.getString("categoria")));
                     corso.setDataInizio(resultSet.getDate("data_inizio").toLocalDate());
                     corso.setDataFine(resultSet.getDate("data_fine").toLocalDate());
+                    System.out.println("Corso:  "+corso);
 
                     corsi.add(corso);
 

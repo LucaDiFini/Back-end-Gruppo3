@@ -45,4 +45,22 @@ public class CandidaturaResource {
         }
     }
 
+    @GET
+    @Path("/all")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCandidature() throws SQLException {
+        return Response.status(Response.Status.OK)
+                .entity(candidaturaRepository.getCandidature())
+                .build();
+    }
+
+    @GET
+    @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCandidature(@PathParam("id") int id) throws SQLException {
+        return Response.status(Response.Status.OK)
+                .entity(candidaturaRepository.getCandidatura(id))
+                .build();
+    }
+
 }
