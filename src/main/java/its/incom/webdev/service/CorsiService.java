@@ -1,6 +1,6 @@
 package its.incom.webdev.service;
 
-import its.incom.webdev.persistence.model.CreateCorsoRequest;
+import its.incom.webdev.rest.model.CreateCorsoRequest;
 import its.incom.webdev.persistence.repository.CorsoRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.BadRequestException;

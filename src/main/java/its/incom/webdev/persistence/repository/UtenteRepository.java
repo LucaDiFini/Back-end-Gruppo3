@@ -78,7 +78,7 @@ public class UtenteRepository {
     public Optional<Utente> findByEmailPsw(String email, String pswHash) {
         try {
             try (Connection connection = database.getConnection()) {
-                try (PreparedStatement statement = connection.prepareStatement("SELECT id,email,pswHash FROM Utente WHERE email = ? AND pswHash = ?")) {
+                try (PreparedStatement statement = connection.prepareStatement("SELECT id,email,pswHash,ruolo FROM Utente WHERE email = ? AND pswHash = ?")) {
                     statement.setString(1, email);
                     statement.setString(2, pswHash);
                     var resultSet = statement.executeQuery();
@@ -87,6 +87,7 @@ public class UtenteRepository {
                         utente.setId(resultSet.getInt("id"));
                         utente.setEmail(resultSet.getString("email"));
                         utente.setPasswordHash(resultSet.getString("pswHash"));
+                        utente.setRuolo(Ruolo.valueOf(resultSet.getString("ruolo")));
                         return Optional.of(utente);
                     }
                 }

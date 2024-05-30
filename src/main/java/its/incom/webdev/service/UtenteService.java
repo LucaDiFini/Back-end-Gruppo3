@@ -5,6 +5,8 @@ import its.incom.webdev.persistence.model.*;
 
 import its.incom.webdev.persistence.repository.SessioneRepository;
 import its.incom.webdev.persistence.repository.UtenteRepository;
+import its.incom.webdev.rest.model.CreateUtenteRequest;
+import its.incom.webdev.rest.model.CreateUtenteResponse;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.sql.SQLException;
@@ -75,6 +77,20 @@ public class UtenteService {
             Sessione s=sessioneRepository.getSessioneById(sessionId);
             Optional<Utente> utente=utenteRepository.getUtenteById(s.getId_utente());
             if(utente.get().getRuolo()==Ruolo.A){
+                return true;
+            }else{
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public  boolean isDocente(int sessionId){
+        try {
+            Sessione s=sessioneRepository.getSessioneById(sessionId);
+            Optional<Utente> utente=utenteRepository.getUtenteById(s.getId_utente());
+            if(utente.get().getRuolo()==Ruolo.D){
                 return true;
             }else{
                 return false;

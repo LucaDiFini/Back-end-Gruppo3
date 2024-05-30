@@ -1,10 +1,9 @@
 package its.incom.webdev.rest;
 
 import its.incom.webdev.persistence.exception.UserNotHavePermissionException;
-import its.incom.webdev.persistence.model.CandidaturaResponse;
-import its.incom.webdev.persistence.model.ChangeRuoloRequest;
-import its.incom.webdev.persistence.model.CreateUtenteResponse;
-import its.incom.webdev.persistence.model.Ruolo;
+import its.incom.webdev.rest.model.CandidaturaResponse;
+import its.incom.webdev.rest.model.ChangeRuoloRequest;
+import its.incom.webdev.rest.model.CreateUtenteResponse;
 import its.incom.webdev.service.AuthenticationService;
 import its.incom.webdev.service.CandidatureService;
 import its.incom.webdev.service.UtenteService;
@@ -12,7 +11,6 @@ import its.incom.webdev.service.exception.WrongUsernameOrPasswordException;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.NewCookie;
 import jakarta.ws.rs.core.Response;
 
 import java.sql.SQLException;

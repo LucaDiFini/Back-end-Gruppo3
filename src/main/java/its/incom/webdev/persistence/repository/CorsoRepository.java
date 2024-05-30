@@ -2,10 +2,8 @@ package its.incom.webdev.persistence.repository;
 
 import its.incom.webdev.persistence.model.Categoria;
 import its.incom.webdev.persistence.model.Corso;
-import its.incom.webdev.persistence.model.CreateCorsoRequest;
-import its.incom.webdev.persistence.model.Utente;
+import its.incom.webdev.rest.model.CreateCorsoRequest;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.ws.rs.BadRequestException;
 
 import javax.sql.DataSource;
 import java.sql.*;

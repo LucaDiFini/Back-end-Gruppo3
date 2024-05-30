@@ -1,15 +1,12 @@
 package its.incom.webdev.rest;
 
 import its.incom.webdev.persistence.exception.UserNotHavePermissionException;
-import its.incom.webdev.persistence.model.ChangeRuoloRequest;
-import its.incom.webdev.persistence.model.CreateCorsoRequest;
-import its.incom.webdev.persistence.model.CreateUtenteResponse;
+import its.incom.webdev.rest.model.CreateCorsoRequest;
 import its.incom.webdev.persistence.repository.CandidaturaRepository;
 import its.incom.webdev.persistence.repository.CorsoRepository;
 import its.incom.webdev.service.AuthenticationService;
 import its.incom.webdev.service.CorsiService;
 import its.incom.webdev.service.UtenteService;
-import its.incom.webdev.service.exception.WrongUsernameOrPasswordException;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 
@@ -64,14 +61,12 @@ public class CorsiResource {
                 .entity(corsoRepository.getCorsi())
                 .build();
     }
-    //creare corsi
 
     @POST
     @Path("/nuovo")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response newCorso(@CookieParam("SESSION_ID") @DefaultValue("-1") int sessioneId, CreateCorsoRequest request) throws UserNotHavePermissionException, SQLException {
-        //controllare sia l'admin
         if (!utenteService.isAdmin(sessioneId)) {
             throw new UserNotHavePermissionException("l'utente non ha i permessi");
         }

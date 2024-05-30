@@ -1,4 +1,6 @@
-package its.incom.webdev.persistence.model;
+package its.incom.webdev.rest.model;
+
+import its.incom.webdev.persistence.model.Categoria;
 
 import java.time.LocalDate;
 

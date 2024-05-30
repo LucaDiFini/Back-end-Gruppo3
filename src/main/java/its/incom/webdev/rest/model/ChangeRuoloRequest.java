@@ -1,4 +1,4 @@
-package its.incom.webdev.persistence.model;
+package its.incom.webdev.rest.model;
 
 public class ChangeRuoloRequest {
     private int id_utente;

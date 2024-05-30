@@ -1,6 +1,6 @@
 package its.incom.webdev.service;
 
-import its.incom.webdev.persistence.model.CreateUtenteResponse;
+import its.incom.webdev.rest.model.CreateUtenteResponse;
 import its.incom.webdev.persistence.model.Utente;
 import its.incom.webdev.persistence.model.Sessione;
 import its.incom.webdev.persistence.repository.UtenteRepository;

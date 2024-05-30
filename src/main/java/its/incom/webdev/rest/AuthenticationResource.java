@@ -1,10 +1,8 @@
 package its.incom.webdev.rest;
 
-import its.incom.webdev.persistence.model.CreateUtenteRequest;
+import its.incom.webdev.rest.model.CreateUtenteRequest;
 
-import its.incom.webdev.persistence.model.CreateUtenteResponse;
 import its.incom.webdev.persistence.model.Utente;
-import its.incom.webdev.persistence.repository.CorsoRepository;
 import its.incom.webdev.persistence.repository.UtenteRepository;
 import its.incom.webdev.service.AuthenticationService;
 import its.incom.webdev.service.HashCalculator;
@@ -28,11 +26,13 @@ public class AuthenticationResource {
 
 
     private final UtenteService utenteService;
+    private final HashCalculator hashCalculator;
 
-    public AuthenticationResource(UtenteRepository utenteRepository, AuthenticationService authenticationService, UtenteService utenteService) {
+    public AuthenticationResource(UtenteRepository utenteRepository, AuthenticationService authenticationService, UtenteService utenteService, HashCalculator hashCalculator) {
         this.utenteRepository = utenteRepository;
         this.authenticationService = authenticationService;
         this.utenteService = utenteService;
+        this.hashCalculator = hashCalculator;
     }
 
     @POST
@@ -42,10 +42,12 @@ public class AuthenticationResource {
     public Response login(JsonObject loginRequest) {
         String email = loginRequest.getString("email");
         String password = loginRequest.getString("password");
+        String hash = hashCalculator.calculateHash(password);
         try {
             int sessionId = authenticationService.login(email, password);
             NewCookie sessionCookie = new NewCookie("SESSION_ID", String.valueOf(sessionId), "/", null, null, NewCookie.DEFAULT_MAX_AGE, false);
-            return Response.ok().cookie(sessionCookie).build();
+
+            return Response.ok().cookie(sessionCookie).entity(utenteRepository.findByEmailPsw(email,hash)).build();
         } catch (WrongUsernameOrPasswordException e) {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Wrong username or password").build();
         } catch (SessionCreationException e) {
