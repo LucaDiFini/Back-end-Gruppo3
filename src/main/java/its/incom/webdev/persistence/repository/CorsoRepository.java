@@ -55,7 +55,7 @@ public class CorsoRepository {
 
     public List<Corso> getCorsi() throws SQLException {
         ArrayList<Corso> corsi = new ArrayList<>();
-        String query = "SELECT nome, categoria, data_inizio, data_fine,n_posti FROM Corso";
+        String query = "SELECT id,nome, categoria, data_inizio, data_fine,n_posti FROM Corso";
         try (Connection connection = database.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -63,6 +63,7 @@ public class CorsoRepository {
                 while (resultSet.next()) {
 
                     Corso corso = new Corso();
+                    corso.setId(resultSet.getInt("id"));
                     corso.setNome(resultSet.getString("nome"));
                     corso.setCategoria(Categoria.valueOf(resultSet.getString("categoria")));
                     corso.setDataInizio(resultSet.getDate("data_inizio").toLocalDate());
