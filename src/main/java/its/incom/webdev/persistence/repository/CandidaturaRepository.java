@@ -157,11 +157,10 @@ public class CandidaturaRepository {
 
     public void setEsitoCandidatura(int id,EsitoCandidatura esito){
         String query = "UPDATE Candidatura SET esito = ? WHERE id = ?";
-
         try (Connection connection = database.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, esito.name());
-            statement.setInt(2, id);
+                statement.setString(1, esito.toDatabaseValue());
+                statement.setInt(2, id);
             int rowsUpdated = statement.executeUpdate();
             if (rowsUpdated == 0) {
                 //eccezione personalizzata mancante

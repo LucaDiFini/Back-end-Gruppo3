@@ -81,19 +81,32 @@ public class CandidaturaResource {
     //1 per Amministratore da attesa ad "Convocato Colloquio" o "Bocciato"
 
     @PUT
-    @Path("/changeEsito")
+    @Path("/changeEsitoBeforeColloquio")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response newCorso(@CookieParam("SESSION_ID") @DefaultValue("-1") int sessioneId, ChangeEsitoRequest request) throws UserNotHavePermissionException, SQLException, WrongUsernameOrPasswordException {
+    public Response changeEsitoBeforeColloquio(@CookieParam("SESSION_ID") @DefaultValue("-1") int sessioneId, ChangeEsitoRequest request) throws UserNotHavePermissionException, WrongUsernameOrPasswordException {
         if (sessioneId == -1) {
             //eccezione personalizzata notLogged
             throw new WrongUsernameOrPasswordException();
         }
-        if (!utenteService.isAdmin(sessioneId) || (request.getEsito()!= EsitoCandidatura.CONVOCATO_COLLOQUIO && request.getEsito()!= EsitoCandidatura.BOCCIATO)) {
-            throw new UserNotHavePermissionException("l'utente ADMIN non ha i permessi");
+        if (!utenteService.isAdmin(sessioneId) || (!(request.getEsito()==EsitoCandidatura.CONVOCATO_COLLOQUIO) && !(request.getEsito()==EsitoCandidatura.BOCCIATO))) {
+            throw new UserNotHavePermissionException("l'utente non ha i permessi");
         }
-        /*else if(!utenteService.isDocente(sessioneId) || (request.getEsito()!= EsitoCandidatura.AMMESSO && request.getEsito()!= EsitoCandidatura.AMMESSO_AD_UN_ALTRO_CORSO)){
-            throw new UserNotHavePermissionException("l'utente DOCENTE non ha i permessi");
-        }*/
+        candidatureService.setEsito(request);
+        return Response.status(Response.Status.ACCEPTED)
+                .build();
+    }
+
+    @PUT
+    @Path("/changeEsitoAfterColloquio")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response changeEsitoAfterColloquio(@CookieParam("SESSION_ID") @DefaultValue("-1") int sessioneId, ChangeEsitoRequest request) throws UserNotHavePermissionException, WrongUsernameOrPasswordException {
+        if (sessioneId == -1) {
+            //eccezione personalizzata notLogged
+            throw new WrongUsernameOrPasswordException();
+        }
+        if(!utenteService.isDocente(sessioneId) || (request.getEsito()!= EsitoCandidatura.AMMESSO && request.getEsito()!= EsitoCandidatura.AMMESSO_AD_UN_ALTRO_CORSO)){
+            throw new UserNotHavePermissionException("l'utente non ha i permessi");
+        }
         candidatureService.setEsito(request);
         return Response.status(Response.Status.ACCEPTED)
                 .build();
