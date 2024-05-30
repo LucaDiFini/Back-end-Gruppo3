@@ -38,12 +38,10 @@ public class AuthenticationService {
     public int login(String email, String password) throws WrongUsernameOrPasswordException, SessionCreationException {
         // Calcola l'hash della password
         String hash = hashCalculator.calculateHash(password);
-        System.out.println("psw hash "+hash);
         // Cerca l'utente nel database
         Optional<Utente> maybePartecipante = utenteRepository.findByEmailPsw(email, hash);
         if (maybePartecipante.isPresent()) {
             Utente p = maybePartecipante.get();
-            System.out.println("ruolo:"+p.getRuolo());
             try {
                 // Crea una nuova sessione per l'utente
                 int sessione = sessioneRepository.insertSessione(p.getId());

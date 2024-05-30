@@ -1,8 +1,10 @@
 package its.incom.webdev.rest;
 
+import its.incom.webdev.persistence.exception.UserNotHavePermissionException;
 import its.incom.webdev.persistence.model.CreateUtenteResponse;
 import its.incom.webdev.persistence.repository.CandidaturaRepository;
 import its.incom.webdev.service.AuthenticationService;
+import its.incom.webdev.service.UtenteService;
 import its.incom.webdev.service.exception.WrongUsernameOrPasswordException;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -14,10 +16,12 @@ import java.sql.SQLException;
 public class CandidaturaResource {
     AuthenticationService authenticationService;
     CandidaturaRepository candidaturaRepository;
+    private UtenteService utenteService;
 
-    public CandidaturaResource(AuthenticationService authenticationService, CandidaturaRepository candidaturaRepository) {
+    public CandidaturaResource(AuthenticationService authenticationService, CandidaturaRepository candidaturaRepository, UtenteService utenteService) {
         this.authenticationService = authenticationService;
         this.candidaturaRepository = candidaturaRepository;
+        this.utenteService = utenteService;
     }
 
     @POST
@@ -48,7 +52,10 @@ public class CandidaturaResource {
     @GET
     @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCandidature() throws SQLException {
+    public Response getCandidature(@CookieParam("SESSION_ID") @DefaultValue("-1") int sessioneId) throws SQLException, UserNotHavePermissionException {
+        if (!utenteService.isAdmin(sessioneId)) {
+            throw new UserNotHavePermissionException("l'utente non ha i permessi");
+        }
         return Response.status(Response.Status.OK)
                 .entity(candidaturaRepository.getCandidature())
                 .build();
@@ -57,10 +64,15 @@ public class CandidaturaResource {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCandidature(@PathParam("id") int id) throws SQLException {
+    public Response getCandidatura(@PathParam("id") int id) throws SQLException {
         return Response.status(Response.Status.OK)
                 .entity(candidaturaRepository.getCandidatura(id))
                 .build();
     }
 
+    //modificare l'esito della candidatura in due API PUT
+
+    //1 per Amministratore da attesa ad "Convocato Colloquio" o "Bocciato"
+
+    //2 per Docente da "Convocato Colloquio" a "Ammesso","Ammesso ad un altro corso"
 }

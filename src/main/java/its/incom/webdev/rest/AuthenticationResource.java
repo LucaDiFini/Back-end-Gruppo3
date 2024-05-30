@@ -44,10 +44,7 @@ public class AuthenticationResource {
         String password = loginRequest.getString("password");
         try {
             int sessionId = authenticationService.login(email, password);
-            NewCookie sessionCookie = new NewCookie("SESSION_ID", String.valueOf(sessionId));
-            //prendi utente da sessione Id
-
-            //
+            NewCookie sessionCookie = new NewCookie("SESSION_ID", String.valueOf(sessionId), "/", null, null, NewCookie.DEFAULT_MAX_AGE, false);
             return Response.ok().cookie(sessionCookie).build();
         } catch (WrongUsernameOrPasswordException e) {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Wrong username or password").build();

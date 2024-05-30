@@ -1,9 +1,14 @@
 package its.incom.webdev.rest;
 
+import its.incom.webdev.persistence.exception.UserNotHavePermissionException;
+import its.incom.webdev.persistence.model.ChangeRuoloRequest;
+import its.incom.webdev.persistence.model.CreateCorsoRequest;
 import its.incom.webdev.persistence.model.CreateUtenteResponse;
 import its.incom.webdev.persistence.repository.CandidaturaRepository;
 import its.incom.webdev.persistence.repository.CorsoRepository;
 import its.incom.webdev.service.AuthenticationService;
+import its.incom.webdev.service.CorsiService;
+import its.incom.webdev.service.UtenteService;
 import its.incom.webdev.service.exception.WrongUsernameOrPasswordException;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -18,11 +23,18 @@ public class CorsiResource {
     private final AuthenticationService authenticationService;
     private final CandidaturaRepository candidaturaRepository;
 
-    public CorsiResource(CorsoRepository corsoRepository, AuthenticationService authenticationService, CandidaturaRepository candidaturaRepository) {
+    private final UtenteService utenteService;
+
+    private CorsiService corsiService;
+
+    public CorsiResource(CorsoRepository corsoRepository, AuthenticationService authenticationService, CandidaturaRepository candidaturaRepository, UtenteService utenteService, CorsiService corsiService) {
         this.corsoRepository = corsoRepository;
         this.authenticationService = authenticationService;
 
         this.candidaturaRepository = candidaturaRepository;
+        this.utenteService = utenteService;
+
+        this.corsiService = corsiService;
     }
 
     @GET
@@ -39,7 +51,6 @@ public class CorsiResource {
     @Path("/tipologia/{categoria}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCorsoByCategoria(@PathParam("categoria") String categoria) {
-        System.out.println("ciao");
         return Response.status(Response.Status.OK)
                 .entity(corsoRepository.getCorsiByCategoria(categoria))
                 .build();
@@ -54,4 +65,18 @@ public class CorsiResource {
                 .build();
     }
     //creare corsi
+
+    @POST
+    @Path("/nuovo")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response newCorso(@CookieParam("SESSION_ID") @DefaultValue("-1") int sessioneId, CreateCorsoRequest request) throws UserNotHavePermissionException, SQLException {
+        //controllare sia l'admin
+        if (!utenteService.isAdmin(sessioneId)) {
+            throw new UserNotHavePermissionException("l'utente non ha i permessi");
+        }
+        return Response.status(Response.Status.CREATED)
+                .entity(corsiService.newCorso(request))
+                .build();
+    }
 }

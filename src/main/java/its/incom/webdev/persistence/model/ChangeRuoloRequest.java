@@ -2,6 +2,7 @@ package its.incom.webdev.persistence.model;
 
 public class ChangeRuoloRequest {
     private int id_utente;
+    private String new_ruolo;
 
     public String getNew_ruolo() {
         return new_ruolo;
@@ -11,7 +12,7 @@ public class ChangeRuoloRequest {
         this.new_ruolo = new_ruolo;
     }
 
-    private String new_ruolo;
+
 
     // Getters e setters
     public int getId_utente() {

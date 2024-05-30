@@ -2,26 +2,13 @@ package its.incom.webdev.persistence.model;
 
 import java.time.LocalDate;
 
-public class Corso {
-    private int id;
+public class CreateCorsoRequest {
     private String nome;
     private Categoria categoria;
-    private LocalDate dataInizio;
-    private LocalDate dataFine;
+    private LocalDate data_inizio;
+    private LocalDate data_fine;
 
     private int n_posti;
-
-    public Corso() {
-    }
-
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getNome() {
         return nome;
@@ -39,21 +26,22 @@ public class Corso {
         this.categoria = categoria;
     }
 
-    public LocalDate getDataInizio() {
-        return dataInizio;
+    public LocalDate getData_inizio() {
+        return data_inizio;
     }
 
-    public void setDataInizio(LocalDate dataInizio) {
-        this.dataInizio = dataInizio;
+    public void setData_inizio(LocalDate data_inizio) {
+        this.data_inizio = data_inizio;
     }
 
-    public LocalDate getDataFine() {
-        return dataFine;
+    public LocalDate getData_fine() {
+        return data_fine;
     }
 
-    public void setDataFine(LocalDate dataFine) {
-        this.dataFine = dataFine;
+    public void setData_fine(LocalDate data_fine) {
+        this.data_fine = data_fine;
     }
+
     public int getN_posti() {
         return n_posti;
     }

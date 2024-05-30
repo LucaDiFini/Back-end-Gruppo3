@@ -1,7 +1,7 @@
 package its.incom.webdev.persistence.model;
 
 public enum Categoria {
-    tecnologie,
+    nuove_tecnologie,
     programmazione,
     comunicazione
 }
