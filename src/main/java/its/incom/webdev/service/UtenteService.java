@@ -34,6 +34,7 @@ public class UtenteService {
         response.setNome(utente.getNome());
         response.setCognome(utente.getCognome());
         response.setEmail(utente.getEmail());
+        response.setRuolo(utente.getRuolo());
 
         return response;
     }
